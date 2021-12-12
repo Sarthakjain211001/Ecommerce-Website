@@ -1,7 +1,7 @@
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@material-ui/icons";
 import React from "react";
 import styled from "styled-components";
-import SareeImg from "../Images/Saree.png"
+import sliderItems from "../data";
 
 const Container = styled.div`
   width: 100%;
@@ -9,7 +9,7 @@ const Container = styled.div`
   display: flex;
   /* background-color: teal; */
   position: relative;
-  overflow: hidden; // To prevent the content from going out of the page horizontally
+  /* overflow: hidden; // To prevent the content from going out of the page horizontally */
 `
 const Arrow = styled.div`
   width: 50px;
@@ -23,19 +23,18 @@ const Arrow = styled.div`
   top: 0;
   bottom: 0;
   left: ${(props) =>
-    props.direction === "left" &&
-    "10px"}; //props. If direction is left then set left property to 10px
+    props.direction === "left" && "10px"}; //props. If direction is left then set left property to 10px
   right: ${(props) =>
-    props.direction === "right" &&
-    "10px"}; //props. If direction is right then set right property to 10px
+    props.direction === "right" && "10px"}; //props. If direction is right then set right property to 10px
   margin: auto;
   cursor: pointer;
   opacity: 0.5;
+  z-index: 2;  //To bring the arrow above the image.
 `
 const Wrapper = styled.div`
   height: 100%;
   display: flex; //To make the slides come horizontal after one another
-  transform: translateX(-200vw); //For moving the slider (i.e move the slides in X direction).  For left moving use (-) . For right use (+  or nothing).  
+  /* transform: translateX(0vw); //For moving the slider (i.e move the slides in X direction).  For left moving use (-) . For right use (+  or nothing).   */
                                  // vw means viewport width. 100vw means 100% of viewport. (-) means move to left direction.
 `                                 
 const Slide = styled.div`
@@ -84,16 +83,21 @@ const Slider = () => {
           <ArrowLeftOutlined />  {/*Left Arrow on Slider. Taken from Material UI */}
         </Arrow>
         <Wrapper>
-          <Slide bg="#eef6fc">
+          {sliderItems.map((item)=>{
+            // {const{ img, title, description, bg } = item} 
+            console.log(item);
+           return <Slide bg={item.bg}>
             <ImgContainer>
-              <Image src= {SareeImg}/>
+              <Image src= {item.img}/>
             </ImgContainer>
             <InfoContainer>
-                <Title>SUMMER SALE</Title>
-                <Description>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS</Description>
+                <Title>{item.title}</Title>
+                <Description>{item.description}</Description>
                 <Button>SHOP NOW</Button>
             </InfoContainer>
           </Slide>
+          })}
+{/*           
           <Slide bg="#faf3f3">
             <ImgContainer>
               <Image src= {SareeImg}/>
@@ -113,7 +117,7 @@ const Slider = () => {
                 <Description>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS</Description>
                 <Button>SHOP NOW</Button>
             </InfoContainer>
-          </Slide>
+          </Slide> */}
         </Wrapper>
         <Arrow direction="right"> {/*direction is passed as a prop here*/}
           <ArrowRightOutlined />  {/*Right Arrow on Slider. Taken from Material UI */}

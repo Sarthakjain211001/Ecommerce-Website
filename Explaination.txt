@@ -26,8 +26,10 @@ Used material ui for icons -
 Slide is the flex box. Insite it are image containers(items in flex). ANd inside image container is the image 
 ImgConatiner has height of 100%. So the imag containers are placed inside flex box(Slide) as covering the whole length vertically of the flex box. 
 
+Using useState hook for changing the value in translateX() when we click on arrow buttons
 
-
+Made data.js and kept the data of the slider in it and imported data from data.js in slider.jsx . 
+Used map method on SliderItems Array to traverse the array and display the data.
 
 **** 
 styled-Components

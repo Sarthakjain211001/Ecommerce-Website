@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@material-ui/icons";
-import React from "react";
+import React, { useState} from "react";
 import styled from "styled-components";
 import sliderItems from "../data";
 
@@ -9,7 +9,7 @@ const Container = styled.div`
   display: flex;
   /* background-color: teal; */
   position: relative;
-  /* overflow: hidden; // To prevent the content from going out of the page horizontally */
+  overflow: hidden; // To prevent the content from going out of the page horizontally
 `
 const Arrow = styled.div`
   width: 50px;
@@ -34,8 +34,9 @@ const Arrow = styled.div`
 const Wrapper = styled.div`
   height: 100%;
   display: flex; //To make the slides come horizontal after one another
-  /* transform: translateX(0vw); //For moving the slider (i.e move the slides in X direction).  For left moving use (-) . For right use (+  or nothing).   */
-                                 // vw means viewport width. 100vw means 100% of viewport. (-) means move to left direction.
+  transition: all 1.5s ease; //To move the slides smoothly in 1.5 sec.
+  transform: translateX(${props=>props.slideIndex * -100}vw); //For moving the slider (i.e move the slides in X direction). {{  For left moving use (-) . For right use (+  or nothing).  (SHAYAD)}}
+                                 // vw means viewport width. 100vw means 100% of viewport.  {{  (-) means move to left direction. (SHAYAD) }}
 `                                 
 const Slide = styled.div`
   width: 100vw;
@@ -57,11 +58,9 @@ const Image = styled.img`
 const InfoContainer = styled.div`
   flex: 1.5;
   padding: 50px;
-
 `
 const Title = styled.h1`
 font-size: 70px;
-
 `
 const Description = styled.p`
 margin: 50px 0px;
@@ -69,6 +68,7 @@ font-size: 20px;
 font-weight: 500;
 letter-spacing: 3px;
 `
+
 const Button = styled.button`
 padding: 10px;
 font-size: 20px;
@@ -76,13 +76,24 @@ background: transparent;
 cursor: pointer;
 `
 const Slider = () => {
+  const [SlideIndex, setSlideIndex] = useState(0)  //created a sate variable SlideIndex which will be passed in translateX()
+  
+  const handleClick = (direction)=>{
+    if(direction==="left"){                       //changing the value of slideIndex 
+      setSlideIndex(SlideIndex>0 ? SlideIndex-1 : 2);  //Because if slideIndex is 0 then it should go to -200 and not on 100. Because our slides exists on 0,-100 and -200.
+    }
+    else{
+      setSlideIndex(SlideIndex<2 ? SlideIndex+1 : 0);
+    }
+  }
+
   return (
     <div>
       <Container>
-        <Arrow direction="left"> {/*direction is passed as a prop here*/}
+        <Arrow direction="left" onClick={()=>{handleClick("left")}}> {/*direction is passed as a prop here*/}
           <ArrowLeftOutlined />  {/*Left Arrow on Slider. Taken from Material UI */}
         </Arrow>
-        <Wrapper>
+        <Wrapper slideIndex={SlideIndex}>
           {sliderItems.map((item)=>{
             // {const{ img, title, description, bg } = item} 
             console.log(item);
@@ -97,29 +108,8 @@ const Slider = () => {
             </InfoContainer>
           </Slide>
           })}
-{/*           
-          <Slide bg="#faf3f3">
-            <ImgContainer>
-              <Image src= {SareeImg}/>
-            </ImgContainer>
-            <InfoContainer>
-                <Title>SUMMER SALE</Title>
-                <Description>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS</Description>
-                <Button>SHOP NOW</Button>
-            </InfoContainer>
-          </Slide>
-          <Slide bg="#fdfdd7">
-            <ImgContainer>
-              <Image src= {SareeImg}/>
-            </ImgContainer>
-            <InfoContainer>
-                <Title>SUMMER SALE</Title>
-                <Description>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS</Description>
-                <Button>SHOP NOW</Button>
-            </InfoContainer>
-          </Slide> */}
         </Wrapper>
-        <Arrow direction="right"> {/*direction is passed as a prop here*/}
+        <Arrow direction="right" onClick={()=>{handleClick("right")}}> {/*direction is passed as a prop here*/}
           <ArrowRightOutlined />  {/*Right Arrow on Slider. Taken from Material UI */}
         </Arrow>
       </Container>

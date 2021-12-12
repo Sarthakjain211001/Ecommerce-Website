@@ -31,6 +31,16 @@ Using useState hook for changing the value in translateX() when we click on arro
 Made data.js and kept the data of the slider in it and imported data from data.js in slider.jsx . 
 Used map method on SliderItems Array to traverse the array and display the data.
 
+To bring two things one above the another then use posiotion: absolute.
+To bring the low thing on top og the top one then use z-index (i.e move the item in front in z axis.)
+
+UI-Layout : 
+
+Navbar 
+Slider 
+Categories
+Products
+
 **** 
 styled-Components
 material ui (core/icons)

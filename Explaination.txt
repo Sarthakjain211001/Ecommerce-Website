@@ -1,0 +1,34 @@
+Used google fonts. Urbanist.
+Select all the styles from the urbanist. Then copy the link from the right column and paste it in the index.html in the public folder.
+Then copy the thing below the link from the right column and paste it in the index.css in the src folder. 
+
+Create a pages folder. 
+Create Home.js in it. 
+.jsx and .js files have no difference in them. It is just for visual classification .. nothing more than this.
+
+Styled Components:   //Used to style our components in an easy manner
+  npm i styled-components
+
+  const Container = styled.div`   //It means that Container will be a div having the style written in back ticks.
+     height : 30px ;              //write css here
+  `
+
+Flexbox - (Used to make the items horizontal)
+  display : flex 
+  align-items: center  //For making the items come to center vertically
+  justify-content: center    //For making the items come to center horizontally
+
+Used material ui for icons - 
+  In terminal : npm install @material-ui/core @material-ui/icon
+  Go the material UI website ..There searfch the icon. Copy it's name and paste it in our project. It will get imported.
+  When we write <Search   then it automatically detects <Search/> from material ui and imports it.
+  
+Slide is the flex box. Insite it are image containers(items in flex). ANd inside image container is the image 
+ImgConatiner has height of 100%. So the imag containers are placed inside flex box(Slide) as covering the whole length vertically of the flex box. 
+
+
+
+
+**** 
+styled-Components
+material ui (core/icons)

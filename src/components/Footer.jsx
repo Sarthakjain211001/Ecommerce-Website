@@ -122,7 +122,7 @@ const Footer = () => {
                 imt_2019087@iiitm.ac.in
                 </ContactItem>
                 <Payment_Block>
-                <Payment/>
+                <Payment style={{"marginRight":"10px"}}/>
                 <Cards src={Payment_Cards}/>
                 </Payment_Block>
             </Right>

@@ -25,11 +25,10 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    /* border: 3px solid blue; */
     background-color: #f3fffd;
     position: relative;
 
-    &:hover ${Info}{
+    &:hover ${Info}{   //Changing the properties of Info when we hover on Container
      opacity: 1;
     }
 `
@@ -42,7 +41,6 @@ position: absolute;
 `
 const Image = styled.img`
 height: 75%;
-/* border: 3px solid green; */
 z-index: 2;
 `
 const Icon = styled.div`
@@ -54,7 +52,6 @@ display: flex;
 align-items: center;
 justify-content: center;
 margin: 10px;
-/* cursor: pointer; */
 transition: all 0.2s ease;
 &:hover{
     background-color: #e9f5f5;

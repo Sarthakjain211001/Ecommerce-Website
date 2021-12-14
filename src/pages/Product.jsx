@@ -1,4 +1,3 @@
-
 import { Add, Remove } from '@material-ui/icons'
 import React from 'react'
 import styled from 'styled-components'
@@ -7,28 +6,32 @@ import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 import Newsletter from '../components/Newsletter'
 import product1 from "../Images/product1.png"
+import { mobile } from '../responsive'
 
 
 const Container = styled.div``
+
 const Wrapper = styled.div`
 padding: 50px;
 display: flex;
-
+${mobile({flexDirection :"column", padding:"10px"})}
 `
 const ImgContainer = styled.div`
 flex:1;
 padding: 0px 50px;
+
 `
 const Image = styled.img`
 /* border: 3px solid red; */
 width: 80%;
 height: 90vh;
 object-fit: cover;
-
+${mobile({height: "40vh", marginLeft:"15px"})}
 `
 
 const InfoContainer = styled.div`
 flex:1;
+${mobile({padding:"10px"})}
 `
 const Title = styled.h1`
 font-weight: 200;
@@ -47,6 +50,8 @@ display: flex;
 width: 50%;
 margin: 30px 0px;
 justify-content: space-between;
+${mobile({width:"100% "})}
+
 `
 const Filter = styled.div`
 display: flex;
@@ -75,6 +80,7 @@ display: flex;
 align-items: center;
 width: 50%;
 justify-content: space-between;
+
 `
 const QuantityContainer = styled.div`
 display: flex;
@@ -148,7 +154,7 @@ const Product = () => {
                               <Add/> 
                           </QuantityContainer>            
                       </AddContainer>                     
-                      <Button>ADD TO CART</Button>
+                  <Button>ADD TO CART</Button>
                 </InfoContainer>
             </Wrapper>
             <Newsletter/>

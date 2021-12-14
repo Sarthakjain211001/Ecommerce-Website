@@ -2,9 +2,12 @@ import { Facebook, Instagram, MailOutline, Payment, Phone, Pinterest, Room, Twit
 import React from 'react'
 import styled from 'styled-components'
 import Payment_Cards from '../Images/Payment_Cards.png'
+import { mobile } from '../responsive'
+
 const Container = styled.div`
     display: flex;
     /* justify-content: space-between; */
+    ${mobile({ flexDirection: "column", backgroundColor:"#f2fff0", marginTop:"5px"})}
 `
 const Left = styled.div`
 flex: 1;

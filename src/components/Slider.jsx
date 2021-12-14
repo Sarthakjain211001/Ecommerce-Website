@@ -2,6 +2,7 @@ import { ArrowLeftOutlined, ArrowRightOutlined } from "@material-ui/icons";
 import React, { useState} from "react";
 import styled from "styled-components";
 import {sliderItems} from "../data";
+import { mobile } from "../responsive";
 
 const Container = styled.div`
   width: 100%;
@@ -10,6 +11,7 @@ const Container = styled.div`
   /* background-color: teal; */
   position: relative;
   overflow: hidden; // To prevent the content from going out of the page horizontally
+  ${mobile({  height: "90vh"})}
 `
 const Arrow = styled.div`
   width: 50px;
@@ -44,36 +46,43 @@ const Slide = styled.div`
   display: flex;
   align-items: center;
   background-color: ${props=> props.bg};  //Passing backgound color as props.
+  ${mobile({ flexDirection: "column"})}
 `
 const ImgContainer = styled.div`
   height: 100%;
   flex: 1;
   /* border: 3px solid green; */
+  ${mobile({  height: "50%"})}
 `
 const Image = styled.img`
   height: 80%;
   margin-left: 20px;
   margin-top: 30px;
+  ${mobile({ height: "90%", marginTop:"15px"})}
+
 `
 const InfoContainer = styled.div`
   flex: 1.5;
   padding: 50px;
+  ${mobile({  padding: "10px", display:"flex", flexDirection: "column", alignItems: "center"})}
 `
 const Title = styled.h1`
 font-size: 70px;
+${mobile({  fontSize: "20px"})}
 `
 const Description = styled.p`
 margin: 50px 0px;
 font-size: 20px;
 font-weight: 500;
 letter-spacing: 3px;
+${mobile({ margin: "20px 0px", fontSize:"18px", textAlign:"center"})}
 `
-
 const Button = styled.button`
 padding: 10px;
 font-size: 20px;
 background: transparent;
 cursor: pointer;
+${mobile({  padding: "5px", fontSize:"15px"})}
 `
 const Slider = () => {
   const [SlideIndex, setSlideIndex] = useState(0)  //created a sate variable SlideIndex which will be passed in translateX()

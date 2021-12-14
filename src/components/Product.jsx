@@ -1,6 +1,7 @@
 import { FavoriteBorderOutlined, SearchOutlined, ShoppingCartOutlined } from '@material-ui/icons'
 import React from 'react'
 import styled from 'styled-components'
+import { mobile } from '../responsive'
 
 const Info = styled.div`
 opacity: 0;
@@ -31,6 +32,8 @@ const Container = styled.div`
     &:hover ${Info}{   //Changing the properties of Info when we hover on Container
      opacity: 1;
     }
+
+    ${mobile({ height: "200px",})}
 `
 const Circle = styled.div`
 width: 200px;

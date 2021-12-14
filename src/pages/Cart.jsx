@@ -6,10 +6,12 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Product7 from "../Images/product7.png"
 import Product2 from "../Images/product2.png"
+import { mobile } from "../responsive";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
   padding: 20px;
+  ${mobile({padding: "5px"})}
 `;
 const Title = styled.h1`
   font-weight: 300;
@@ -35,11 +37,13 @@ const TopText = styled.span`
   text-decoration: underline;
   cursor: pointer;
   margin: 0px 10px;
+  ${mobile({display:"none"})}
 `;
 const Bottom = styled.div`
 display: flex;
 justify-content: space-between;
 margin-top: 20px;
+${mobile({flexDirection:"column"})}
 `
 const Info = styled.div`
 flex: 3;
@@ -51,8 +55,9 @@ display: flex;
 justify-content: space-between;
 margin: 20px 0px;
 /* border: 3px solid blue */
-
+${mobile({flexDirection:"column"})}
 `
+
 const ProductDetail = styled.div`
 flex: 2;
 display: flex;
@@ -61,19 +66,26 @@ display: flex;
 const Image = styled.img`
 height: 30vh;
 object-fit: cover;
+${mobile({height:"20vh"})}
 `
 const Details = styled.div`
 padding: 20px;
 display: flex;
 flex-direction: column;
 justify-content: space-around;
-`
-const ProductName = styled.span``
 
-const ProductId = styled.span``
+`
+const ProductName = styled.span`
+${mobile({marginBottom:"10px"})}
+`
+
+const ProductId = styled.span`
+${mobile({marginBottom:"10px"})}
+`
 
 const ProductColor = styled.span`
 display: flex;
+${mobile({marginBottom:"10px"})}
 `
 
 const Color = styled.span`
@@ -81,7 +93,6 @@ width: 20px;
 height: 20px;
 border-radius: 50%;
 background-color : ${props => props.color};
-
 `
 
 const ProductSize = styled.span``
@@ -92,19 +103,23 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
+${mobile({flexDirection:"row", justifyContent: "space-around",/*border: "2px solid blue"*/})}
 `
 const QuantityContainer = styled.div`
 display: flex;
 align-items: center;
 margin-bottom: 20px;
+${mobile({/*border: "2px solid blue",*/ marginTop:"22px"})}
 `
 const Quantity = styled.div`
 font-size: 24px;
 margin: 5px;
+${mobile({margin:"5px 15px"})}
 `
 const ProductPrice = styled.div`
 font-size: 30px;
-font-weight: 200;
+font-weight: 300;
+/* ${mobile({border: "2px solid blue", })} */
 `
 const Hr = styled.hr`
 background-color: #eee;
@@ -119,6 +134,7 @@ border-radius: 10px;
 /* margin: 20px; */
 padding: 20px;
 height: 50vh;   //Whenever new items will get added the size of the summary box will increase. So we kept it's size like this not like 100px. .. 
+${mobile({border: "1px solid lightgray"})}
 `;
 const SummaryTitle = styled.h1`
 font-weight: 200;

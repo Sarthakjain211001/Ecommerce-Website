@@ -31,16 +31,110 @@ Using useState hook for changing the value in translateX() when we click on arro
 Made data.js and kept the data of the slider in it and imported data from data.js in slider.jsx . 
 Used map method on SliderItems Array to traverse the array and display the data.
 
-To bring two things one above the another then use posiotion: absolute.
-To bring the low thing on top og the top one then use z-index (i.e move the item in front in z axis.)
+To bring two things one above the another then use position: absolute.
+To bring the low thing on top of the top one then use z-index (i.e move the item in front in z axis.)
 
+How to add Responsiveness in styled components : 
+ Create a file responsive.js in src folder. Define the devides in it. 
+ Now import this wherever required and write the changes to be done in ${mobile({width : "20px", padding : "10px, ... , .. })}
+
+********
+Flexbox:-
+ 
+display: flex                      //For making the element a flexbox
+flex: 1                            //For flex items
+align-items: center                //For making the items come to center vertically
+justify-content: center            //For making the items come to center horizontally
+justify-content: space-between     //For making the items go far away from each other horizontally
+justify-content: space-around      //To bring space around the items horizontally
+flex-direction: column             //To make the items come one below the other
+flex-wrap: wrap                    //To make the items adjust according to themselves in a row. When items will increase then some will come in a new row ... Like this
+
+********
 UI-Layout : 
-
 Navbar 
 Slider 
 Categories
 Products
+NewsLetter
+Footer
 
 **** 
+
 styled-Components
 material ui (core/icons)
+
+
+
+
+Ecommerce-api : 
+   npm init -y will do npm init and answer all the questions as yes which otherwise we have to do manually if we use npm init.
+
+npm install express
+npm install mongoose
+npm install dotenv    //To keep our secret items in this.
+npm install nodemon
+
+crypto.js - Reversible 
+bcryptjs  - Irreversible
+
+I am using crypto-js in this project. 
+PASS-SEC in .env file for using as a secret key in crypto-js for encrypting the user passwords.
+
+Our connection string should be secret. Nobody should see it because it contains our username ans password. And if anybody gets this string then he can easily accesss our db and can create/edit/delete our documents.
+Create a .env file . In it write MONGO_URL = connectionstring. 
+In index.js : const dotenv = require("dotenv")
+              dotenv.config()
+              mongoose.connect(process.env.MONGO_URL). .... 
+
+STRIPE (Used for payments) : 
+
+Go to stripe website. Sign In. Then go to the developers option. There go to API Keys. Copy the secret key. 
+Secret key is used in the server side and the publishable key is used in the client side.
+Paste the secret key in the .env file.
+
+Create a stripe.js file in routes.
+The route for the stripe will be created in this file.
+npm i stripe
+Import stripe. 
+Create a post method:    
+                
+                router.post("/payment", (req,res)=>{
+                           stripe.charges.create({              //Charging the client.
+                                source: req.body.tokenId,       //tokenId will come from the client side from where we will make the request.
+                                amount: req.body.amount,        //This amount will also come from client side in the request.
+                                currency: 'inr'      
+                              },                        
+                               (stripeErr, stripeRes) => {
+                                if(stripeErr){                          //If error occurs.
+                                    res.status(500).json(stripeErr);
+                                }else{                                   //If successfull.
+                                    res.status(200).json(stripeRes);                                    
+                                }
+                              }                        
+                              )                        
+                            }) 
+
+For stripe we don't use thunderclient to send request. Instead we make a separate react app for frontend of stripe. We created reactstripe folder.
+
+In reactstripe app : 
+npm i react-stripe-checkout
+
+When we wil make any payment from the client side then stripe will return us a token and using this token we will make payment to our server side.
+Create two pages : Pay.jsx and Success.jsx
+In Pay.jsx create a button for making the payment. Wrap this button in <StripeCheckout>. In this tag pass props : name, description, billingAddress, shippingAddress ,image, amount, token, stripeKey.
+Create a function onToken and pass it in the token prop. And pass the public key in stripeKey prop.
+
+Sending the payment request to the backend : 
+Create a useEffect for token and whenever we will have a token we will send a request to the backend.
+Create a state variable stripeToken. Set the stripeToken in onToken function.
+Create makeRequest function in useEffect hook.
+npm i axios
+Use axios to send post request to the backend
+
+Use cors in the backend index.js to recieve the request from the frontend. 
+in ecommerce api in index.js : 
+npm i cors. 
+app.use(cors())
+
+We can see the payments on the stripe website in the payments option

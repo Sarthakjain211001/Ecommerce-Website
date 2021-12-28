@@ -7,7 +7,15 @@ import Navbar from "../components/Navbar";
 import Product7 from "../Images/product7.png"
 import Product2 from "../Images/product2.png"
 import { mobile } from "../responsive";
+import { useSelector } from "react-redux";
+import StripeCheckout from "react-stripe-checkout";
+import { useState } from "react";
+import { useEffect } from "react";
+import { userRequest } from "../requestMethods"
+import { useNavigate } from "react-router-dom";
 
+const KEY = "pk_test_51K7IaVSJ7mZ97jfF3c4RNiUHjYrhFVsx4VbNP40ODEZCjDLqSbWGEerf8SQYUwA255t8O4xGDZARQ5zz1qXKqSrg00jfr9WKIk"; 
+const SEC_KEY = ""
 const Container = styled.div``;
 const Wrapper = styled.div`
   padding: 20px;
@@ -61,7 +69,6 @@ ${mobile({flexDirection:"column"})}
 const ProductDetail = styled.div`
 flex: 2;
 display: flex;
-
 `
 const Image = styled.img`
 height: 30vh;
@@ -160,6 +167,29 @@ font-weight: 600;
 
 
 const Cart = () => {
+
+  const cart = useSelector(state => state.cart)
+
+  const navigate = useNavigate();
+  const [StripeToken, setStripeToken] = useState(null)
+  const onToken = (token)=>{
+    setStripeToken(token);
+  }
+  useEffect(() => {
+    const makeRequest = async()=>{
+      try{
+        const res = await userRequest.post("/checkout/payment", {
+          tokenId : StripeToken.id,
+          amount: cart.total_amt * 100, 
+        });
+        console.log(res);
+        navigate("/paymentSuccess")
+      }catch(err){
+        console.log(err);
+      }
+    }
+    StripeToken && makeRequest();
+  }, [StripeToken, cart.total_amt, navigate])
   return (
     <div>
       <Container>
@@ -177,51 +207,34 @@ const Cart = () => {
           </Top>
           <Bottom>
               <Info>
-              <Product>
-                  <ProductDetail>
-                      <Image src={Product7}/>
-                      <Details>
-                          <ProductName><b>Product:</b> WINTER JACKET</ProductName>
-                          <ProductId><b>ID:</b> 8770054128</ProductId>
-                          <ProductColor><b>Color: </b><Color color="black"/></ProductColor>
-                          <ProductSize><b>Size:</b> M</ProductSize>
-                      </Details>
-                  </ProductDetail>
-                  <PriceDetail>
-                          <QuantityContainer>
-                              <Remove/>
-                              <Quantity>1</Quantity>
-                              <Add/>
-                          </QuantityContainer>
-                          <ProductPrice>Rs 1500</ProductPrice>
-                  </PriceDetail>
-              </Product>
+              {
+              cart.products.map(product =>(<Product>
+                <ProductDetail>
+                    <Image src={product.img}/>
+                    <Details>
+                        <ProductName><b>Product:</b> {product.title} </ProductName>
+                        <ProductId><b>ID:</b> {product._id}</ProductId>
+                        <ProductColor><b>Color: </b><Color color={product.color}/></ProductColor>
+                        <ProductSize><b>Size:</b> {product.size}</ProductSize>
+                    </Details>
+                </ProductDetail>
+                <PriceDetail>
+                        <QuantityContainer>
+                            <Remove/>
+                            <Quantity>{product.quantity}</Quantity>
+                            <Add/>
+                        </QuantityContainer>
+                        <ProductPrice>Rs {product.price * product.quantity}</ProductPrice>
+                </PriceDetail>
+            </Product>))
+              }
               <Hr/>
-              <Product>
-                  <ProductDetail>
-                      <Image src={Product2}/>
-                      <Details>
-                          <ProductName><b>Product:</b> STYLISH TOP</ProductName>
-                          <ProductId><b>ID:</b> 9856321047</ProductId>
-                          <ProductColor><b>Color: </b><Color color="green"/></ProductColor>
-                          <ProductSize><b>Size:</b> M</ProductSize>
-                      </Details>
-                  </ProductDetail>
-                  <PriceDetail>
-                          <QuantityContainer>
-                              <Remove/>
-                              <Quantity>1</Quantity>
-                              <Add/>
-                          </QuantityContainer>
-                          <ProductPrice>Rs 800</ProductPrice>
-                  </PriceDetail>
-              </Product>
               </Info>
               <Summary>
                 <SummaryTitle>ORDER SUMMARY</SummaryTitle>
                 <SummaryItem>
                   <SummaryItemText>Subtotal</SummaryItemText>
-                  <SummaryItemPrice>Rs 1000</SummaryItemPrice>
+                  <SummaryItemPrice>Rs {cart.total_amt}</SummaryItemPrice>
                 </SummaryItem>
                 <SummaryItem>
                   <SummaryItemText>Estimated Shipping</SummaryItemText>
@@ -233,9 +246,22 @@ const Cart = () => {
                 </SummaryItem>
                 <SummaryItem type="total">
                   <SummaryItemText >Total</SummaryItemText>
-                  <SummaryItemPrice >Rs 1000</SummaryItemPrice>
+                  <SummaryItemPrice >Rs {cart.total_amt}</SummaryItemPrice>
                 </SummaryItem>
+                <StripeCheckout
+                 name="ecommerce" 
+                 image="https://c8.alamy.com/comp/2E1ACFM/initial-circle-sj-letter-logo-design-vector-template-abstract-letter-sj-logo-design-2E1ACFM.jpg" 
+                 billingAddress 
+                 shippingAddress 
+                 description={`Your total is Rs ${cart.total_amt}`}
+                 amount={cart.total_amt} 
+                 token={onToken} 
+                 stripeKey={KEY} 
+                //  currency={inr}
+                >
                 <Button>CHECKOUT NOW</Button>
+                </StripeCheckout>
+                
               </Summary>
           </Bottom>
         </Wrapper>

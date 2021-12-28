@@ -1,13 +1,16 @@
 import { Add, Remove } from '@material-ui/icons'
 import React from 'react'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import Announcement from '../components/Announcement'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 import Newsletter from '../components/Newsletter'
-import product1 from "../Images/product1.png"
 import { mobile } from '../responsive'
-
+import {publicRequest } from '../requestMethods'
+import { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { addProduct } from '../redux/cartRedux'
 
 const Container = styled.div``
 
@@ -68,6 +71,7 @@ border-radius: 50%;
 background-color: ${props=>props.color};
 margin: 0px 5px;
 cursor: pointer;
+border: 0.5px solid black;
 `
 const FilterSize = styled.select`
 margin-left: 10px;
@@ -115,46 +119,85 @@ transition: all 0.2s ease;
 
 
 const Product = () => {
+    const location= useLocation();
+    const id= location.pathname.split("/")[2]
+    const [product, setproduct] = useState({})    
+    const [quantity, setquantity] = useState(1)
+    const [color, setcolor] = useState("")
+    const [size, setsize] = useState("")
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        const getproduct = async()=>{
+            try{
+              const res = await publicRequest.get("/products/fetchProduct/" + id);
+              setproduct(res.data);
+            }catch(err){
+              console.log(err);
+            }
+        }
+        getproduct();
+    }, [id])
+
+    const handleQuantity = (type)=>{
+       if(type==="dec"){
+           quantity>1 && setquantity(quantity-1);   //if quantity>1 then we can decrese it. But if it is 1 then we shouldn't be able to decrease it below 1.
+       }
+       else{
+        setquantity(quantity+1);
+       }
+    }
+
+    const handleClick=() =>{
+        //Update Cart
+        dispatch(
+            addProduct({ ...product, quantity, color, size})
+        )
+    }
     return (
         <Container>
             <Navbar/>
             <Announcement/>
             <Wrapper>
                 <ImgContainer>
-                  <Image src={product1}/>
+                  <Image src={product.img}/>
                 </ImgContainer>
                 <InfoContainer>
-                  <Title>Formal Shirt</Title>
-                  <Description>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ducimus perspiciatis id sed adipisci eius, doloribus enim dicta deleniti error odit blanditiis suscipit consequuntur illum dolores maiores ipsum numquam. Tenetur, pariatur!</Description>
-                  <Price>Rs.600</Price>
+                  <Title>{product.title}</Title>
+                  <Description>{product.description}</Description>
+                  <Price>Rs. {product.price}</Price>
                   <FilterContainer>
                       <Filter>
                           <FilterTitle>
                               Color
                           </FilterTitle>
-                          <FilterColor color="black"></FilterColor>
-                          <FilterColor color="Blue"></FilterColor>
-                          <FilterColor color="gray"></FilterColor>
+                            { 
+                            product.color &&  product.color.map((c) => {            //If product.color exists then apply map method.  Without this(product.color) it was giving error that product.color is undefined.
+                               return <FilterColor color={c} key={c} onClick={()=>setcolor(c)}></FilterColor>
+                          })}
+
                       </Filter>
                       <Filter>
                           <FilterTitle>Size</FilterTitle>
-                          <FilterSize>
-                              <FilterSizeOption>XS</FilterSizeOption>
-                              <FilterSizeOption>S</FilterSizeOption>
-                              <FilterSizeOption>M</FilterSizeOption>
-                              <FilterSizeOption>L</FilterSizeOption>
-                              <FilterSizeOption>XL</FilterSizeOption>
+                          <FilterSize onChange={(e)=>{setsize(e.target.value); console.log("size: " + size)}}>
+                          
+                           {
+                            console.log(product.size),                            
+                            product.size && product.size.map((s) => {            //If product.size exists then apply map method.  Without this(product.size) it was giving error that product.size is undefined.
+                                return <FilterSizeOption key={s} value={s}> {s}</FilterSizeOption>
+                          })}
                           </FilterSize>
+                          
                       </Filter>
                   </FilterContainer>
                   <AddContainer>
                           <QuantityContainer>
-                              <Remove/>
-                              <Quantity>1</Quantity>
-                              <Add/> 
+                              <Remove onClick={() => {handleQuantity("dec")}}/>
+                              <Quantity>{quantity}</Quantity>
+                              <Add onClick={() => {handleQuantity("inc")}}/> 
                           </QuantityContainer>            
                       </AddContainer>                     
-                  <Button>ADD TO CART</Button>
+                  <Button onClick={handleClick}>ADD TO CART</Button>
                 </InfoContainer>
             </Wrapper>
             <Newsletter/>

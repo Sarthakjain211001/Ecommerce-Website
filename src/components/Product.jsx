@@ -1,5 +1,6 @@
 import { FavoriteBorderOutlined, SearchOutlined, ShoppingCartOutlined } from '@material-ui/icons'
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { mobile } from '../responsive'
 
@@ -10,7 +11,7 @@ height: 100%;
 position: absolute;
 top: 0;
 left: 0;
-background-color: rgba(0,0,0,0.2);
+background-color: #2d33331b;
 z-index: 3;
 display: flex;
 align-items: center;
@@ -73,7 +74,9 @@ const Product = (props) => {
                    <ShoppingCartOutlined/>
                </Icon>
                <Icon>
+                   <Link to={`/product/${props.item._id}`} style={{"color":"black"}}>
                    <SearchOutlined/>
+                   </Link>
                </Icon>
                <Icon>
                    <FavoriteBorderOutlined/>

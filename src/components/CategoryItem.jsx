@@ -1,7 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { mobile } from '../responsive'
-
 
 const Container= styled.div`
      flex:1;
@@ -51,9 +51,11 @@ const CategoryItem = (props) => {
                 <Title>
                   {title}
                 </Title>
+                <Link to={`products/${item.category}`}>
                 <Button>
                   SHOP NOW
                 </Button>
+                </Link>
              </Info>
         </Container>
     )

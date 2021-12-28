@@ -20,7 +20,7 @@ Flexbox - (Used to make the items horizontal)
 
 Used material ui for icons - 
   In terminal : npm install @material-ui/core @material-ui/icon
-  Go the material UI website ..There searfch the icon. Copy it's name and paste it in our project. It will get imported.
+  Go the material UI website ..There search the icon. Copy it's name and paste it in our project. It will get imported.
   When we write <Search   then it automatically detects <Search/> from material ui and imports it.
   
 Slide is the flex box. Insite it are image containers(items in flex). ANd inside image container is the image 
@@ -138,3 +138,180 @@ npm i cors.
 app.use(cors())
 
 We can see the payments on the stripe website in the payments option
+
+
+ADMIN PORTAL : 
+
+Create a new react app adminportal. 
+npm install @material-ui/core @material-ui/icon 
+npm install 
+
+
+video-4 : 
+
+We have 3 category items : shirt, loungewear , jackets. 
+When we will click on shop now button of any category box then we will go to the products page containg items of that particular category.
+Category is present in the data.js file. On clicking on the shop now button the url will change to : localhost:3000/products/:category.
+We will use useLocaton hook to get the url and will use split method to extract the category name from the url.
+
+Filtering the products(Size eand color) : 
+
+We created an empty object named filter (a state variable).
+Whenever we will change size/color, then we will update this object
+
+We are using axios to send request from frontend to backend. While in iNotebook we used fetch. 
+
+Product.jsx page:
+We can write the code of handleClick() button directly here. By creating a post request to update the cart or create a new cart.
+But instead we will use redux here because to want to update the cart at all the positions where it is present. And we also want that as soon as we click on ADD TO CART button the cart should get updated immediately.
+
+Redux : 
+State management tool. 
+Helps in preventing prop drilling. 
+
+npm install @reduxjs/toolkit
+npm install react-redux
+
+First create a store. We will use it in index.js so that all the components will get access to it.
+In src create a folder named redux. In it create store.js
+
+In index.js import store and provider and wrap <App> in <Provider store={store}>
+The components call the actions when they want something to happen to a variable in the redux state.
+Reducer does something based on the action which is called.
+
+State           Action             Reducer
+
+count = 0       increment          count+1
+                decrement          count-1
+
+Slice consists of state, action, reducer.
+In normal redux we have to define these 3 separately. But in redux toolkit we have slice in which we can define these 3 together at one place
+Everytime we create a new reducer we have to import the it in store.js
+
+Use useSelector hook in App.js to call the state variable.
+dispatch hook : To call any action from any reducer
+
+Proper Steps :  (https://redux-toolkit.js.org/tutorials/quick-start#use-redux-state-and-actions-in-react-components)
+
+1st:  Create a Redux store. 
+      i.e. src/redux/store.js
+  
+  import { configureStore } from '@reduxjs/toolkit'
+
+  export const store = configureStore({
+  reducer: {},
+  })
+
+2nd:  Provide the Redux Store to React​
+
+  In index.js:    
+    import { store } from './redux/store'
+    import { Provider } from 'react-redux'
+  
+    <Provider store={store}>
+    <App />
+    </Provider> 
+
+3rd:  Create a Redux State Slice​
+
+  Creating a slice requires a string name to identify the slice, an initial state value, 
+  and one or more reducer functions to define how the state can be updated. 
+
+ In redux folder create counter.js(slice file)
+
+      import { createSlice } from "@reduxjs/toolkit";
+
+      export const counterSlice = createSlice({
+        name: "counter",    //name of the slice
+        
+        initialState: {     //initial state
+          count: 0
+        },
+        
+        reducers: {          //reducers
+          increment: (state) => {
+            state.count += 1;
+          },
+          decrement: (state) => {
+            state.count -= 1;
+          },
+          incrementByAmount: (state, action) => {
+            state.count += action.payload;
+          }
+        }
+      });
+      
+      // Action creators are generated for each case reducer function
+      export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+      
+      export default counterSlice.reducer;
+
+4th:  Add Slice Reducers to the Store​
+
+Next, we need to import the reducer function from the counter slice 
+and add it to our store. By defining a field inside the reducer parameter, 
+we tell the store to use this slice reducer function to handle all updates to that state.
+
+store.js: 
+  import { configureStore } from "@reduxjs/toolkit";
+  import counterReducer from "./counter";
+
+  export default configureStore({
+    reducer: {
+     counter: counterReducer
+    }
+  });
+
+5th: 
+Use Redux State and Actions in React Components.
+Now we can use the React-Redux hooks to let React components interact with the Redux store.
+We can read data from the store with useSelector, and dispatch actions using useDispatch. 
+
+In counter component : 
+
+import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { decrement, increment } from './counterSlice'
+
+export function Counter() {
+  const count = useSelector((state) => state.counter)
+  const dispatch = useDispatch()
+
+  return (
+    <div>
+      <h1> The count is: {count}</h1>
+      <button onClick={() => dispatch(increment())}>increment</button>
+      <button onClick={() => dispatch(decrement())}>decrement</button>
+      <button onClick={() => dispatch(incrementByAmount(33))}>
+        Increment by 33
+      </button>
+    </div>
+  )
+}
+
+
+
+Now, any time you click the "Increment" , "Decrement", and "increment by value" buttons:
+
+The corresponding Redux action will be dispatched to the store
+The counter slice reducer will see the actions and update its state
+The <Counter> component will see the new state value from the store and re-render itself with the new data
+
+
+------------------------------------------------------
+In short : 
+ Create a file like userRedux in which mention all the states, actions, reducers, ... everything .. 
+ Create a store. Import the redux file in it.
+ Whenever we require the states or actions mentioned in the userRedux file we will use useSelector and useDisaptch hooks to call the states and actions respectively.
+-------------------------------------------------------
+
+                           -------------xxxxxxxxxxxxxxx-------------------
+
+In userRedux.js create the slice. It will contain everything : initial state, actions, reducers, ..
+In store import it. 
+In Login.jsx (where we want to use these states(created in userRedux)) we will use useSelector and useDisaptch to use states and actions respectively.
+We created a apiCalls file in which we wrote the code for sending the post request to backend for login and called the actions wherever required. (dispatch and user will be passed as the parameters). We will call this apiCalls in Login.jsx to send the and passed the dispatch and user in it.
+In App.js set user to currentUser state using useSelector. If user is logged in then it will be true else false/null.
+
+Now the problem is : after login when we are reloading the home page then we are lossing the logged in user. i.e the currentUser state is again changing to null. 
+To overcome this we will use persist(from redux toolkit). (https://redux-toolkit.js.org/usage/usage-guide#use-with-redux-persist)

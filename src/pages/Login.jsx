@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { mobile } from '../responsive'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../redux/apiCalls'
+
 
 const Container = styled.div`
 width: 100vw;
@@ -53,6 +56,11 @@ cursor: pointer;
 /* margin-left: 29%; */
 margin-bottom: 10px;
 margin-top: 10px;
+&:disabled{
+    background-color: #dbdbdb;
+    color: teal;
+    cursor: not-allowed;
+}
 
 `
 const Link = styled.a`
@@ -61,16 +69,30 @@ const Link = styled.a`
     text-decoration: underline;
     cursor: pointer;
 `
+const Error = styled.span`
+    color: red;
+    font-size: 15px;
+`
 
 const Login = () => {
+    const [email, setemail] = useState("")
+    const [password, setpassword] = useState("")
+    const dispatch = useDispatch()
+
+    const {isFetching, error} = useSelector((state) => state.user)  //using isFetching and error states
+    const handleClick = (e)=>{
+        e.preventDefault();
+        login(dispatch, {email, password});   //calling login from apiCalls file to send api request for login
+    }
     return (
         <Container>
         <Wrapper>
             <Title>SIGN IN</Title>
             <Form>
-                <Input placeholder="email"/>
-                <Input placeholder="password"/>
-                <Button>LOGIN</Button>
+                <Input placeholder="email" onChange={(e)=> setemail(e.target.value)}/>
+                <Input placeholder="password" onChange={(e)=> setpassword(e.target.value)}/>
+                <Button onClick={handleClick} disabled={isFetching}>LOGIN</Button>  {/*when isFetching state will be true i.e fetching the response is in progress then the login button will be disabled */}
+                {error && <Error>Something went wrong...</Error>}  {/*if error occurs i.e the error state changes to true then this will be printed*/}
                 <Link>Forgot password ?</Link>
                 <Link>Register</Link>
                 

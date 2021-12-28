@@ -19,15 +19,19 @@ const ProductSchema = new Schema({
         type: Array,  // There can be more than one category for an item.        
     },
     size : {
-        type: String,
+        type: Array,   //There can be more than one size for one product.
     },
     color : {
-        type: String,
+        type: Array,     //There can be more than one color for one product.
     },
     price : {
         type: Number,
         required: true,
     },
+    inStock: {
+        type: Boolean,
+        default: true,
+    }
 }, 
 {timestamps : true}   //Mongo will create createdAt and updatedAt .
 )

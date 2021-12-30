@@ -90,7 +90,7 @@ const Login = () => {
             <Title>SIGN IN</Title>
             <Form>
                 <Input placeholder="email" onChange={(e)=> setemail(e.target.value)}/>
-                <Input placeholder="password" onChange={(e)=> setpassword(e.target.value)}/>
+                <Input type="password" onChange={(e)=> setpassword(e.target.value)}/>
                 <Button onClick={handleClick} disabled={isFetching}>LOGIN</Button>  {/*when isFetching state will be true i.e fetching the response is in progress then the login button will be disabled */}
                 {error && <Error>Something went wrong...</Error>}  {/*if error occurs i.e the error state changes to true then this will be printed*/}
                 <Link>Forgot password ?</Link>

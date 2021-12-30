@@ -128,6 +128,7 @@ const Footer = () => {
                 <Payment style={{"marginRight":"10px"}}/>
                 <Cards src={Payment_Cards}/>
                 </Payment_Block>
+
             </Right>
         </Container>
     )

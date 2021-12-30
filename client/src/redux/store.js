@@ -1,4 +1,4 @@
-import { configureStore, createSlice } from '@reduxjs/toolkit'
+import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import cartReducer from "./cartRedux"
 import userReducer from "./UserRedux"
  
@@ -20,15 +20,14 @@ const persistConfig = {    //for persist
   storage,
 }
 
+const rootReducer = combineReducers({ user: userReducer, cart: cartReducer})
+                                            //We combined both the reducers
 
-const persistedReducer = persistReducer(persistConfig, userReducer) //for persist
-                                                         //We want to persist the userReducer
+const persistedReducer = persistReducer(persistConfig, rootReducer) //for persist
+                                                         //We want to persist both the combined reducers
 
 export const store = configureStore({
-  reducer: {
-      cart: cartReducer,
-      user : persistedReducer,
-  },
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>     //for persist
   getDefaultMiddleware({
     serializableCheck: {

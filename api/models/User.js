@@ -19,6 +19,9 @@ const UserSchema = new Schema({
     isAdmin : {
         type: Boolean,     //either true or false.
         default : false    // And false by default.
+    },
+    img:{
+        type: String
     }
 }, 
 {timestamps : true}   //Mongo will create createdAt and updatedAt .

@@ -1,0 +1,11 @@
+.container{
+    display: flex;
+    margin-top: 10px;
+}
+.link{
+    text-decoration: none;
+    color: inherit;
+}
+
+/*Styling from App.css will also get inherited in all the pages and components because all the pages will be called in App.js*/
+/*So styling of .link will get inherited in Sidebar component where link is made*/

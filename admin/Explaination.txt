@@ -1,0 +1,16 @@
+box shadow generator :  Google this to auto generate code for box shadow according to our customizations.
+
+Adding more than one classes to a component and it's styling : 
+
+<div className = "class1 class2">
+....
+</div>
+
+STYLING IN SEPARATE CSS FILE: 
+.class1.class2{
+  margin : 2px 5px; 
+   ..... 
+}
+
+Recharts
+data grid

@@ -1,10 +1,11 @@
 import { Badge } from "@material-ui/core";
 import { Search, ShoppingCartOutlined } from "@material-ui/icons";
 import React from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { mobile } from "../responsive";
+import { logout } from "../redux/UserRedux";
 
 const Container = styled.div`
   height: 60px;
@@ -52,7 +53,7 @@ const Input = styled.input`
 const Logo = styled.h1`
   font-weight: bold;
   text-align: center;
-  ${mobile({  fontSize: "24px"})}
+  ${mobile({  fontSize: "24px"})};
 `;
 const MenuItem = styled.div`
   font-size: 14px;
@@ -62,8 +63,16 @@ const MenuItem = styled.div`
 `;
 
 const Navbar = () => {
-  const c_quantity = useSelector(state => state.cart.cart_quantity);
-  console.log(c_quantity);
+  const c_quantity = useSelector(state => state.cart.cart_quantity);   
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector(state => state.user.currentUser)
+  const handleLogout=(e)=>{
+      e.preventDefault();
+      dispatch(logout());
+      navigate("/login");
+  }
+
   return (
     <Container>
       <Wrapper>
@@ -76,12 +85,13 @@ const Navbar = () => {
           </SearchContainer>
         </Left>
         <Center>
-          <Logo>LAMA.</Logo>
+          <Logo><Link to = "/" style={{"textDecoration":"none", "color":"black"}}>LAMA.</Link></Logo>
         </Center>
         <Right>
-          <MenuItem>Register</MenuItem>
-          <MenuItem>SignIn</MenuItem>
-          
+          <MenuItem style={{"color": "red"}} onClick={handleLogout}>Logout</MenuItem>
+          {!user  && <MenuItem><Link to="Register" style={{"textDecoration":"none"}}>Register</Link></MenuItem>}
+          {!user  && <MenuItem><Link to="/login" style={{"textDecoration":"none"}}>SignIn</Link></MenuItem>}
+           
           <MenuItem>
           <Link to="/cart" >
             <Badge badgeContent={c_quantity} color="primary">

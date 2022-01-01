@@ -1,6 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
+import { register } from '../redux/apiCalls'
 import { mobile } from '../responsive'
+import { useDispatch , useSelector} from 'react-redux'
+import { useState } from 'react'
 
 const Container = styled.div`
 width: 100vw;
@@ -56,21 +59,48 @@ cursor: pointer;
 margin-left: 29%;
 `
 
+const Error = styled.span`
+    color: red;
+    font-size: 15px;
+`
 const Register = () => {
+
+    const [username, setusername] = useState("")
+    const [email, setemail] = useState("")
+    const [password, setpassword] = useState("")
+    
+    const {error} = useSelector(state => state.user)
+
+    const dispatch = useDispatch();
+    
+    const handleClick = (e)=>{
+        e.preventDefault();
+        if(document.getElementById("confPass").value === password)
+          {register(dispatch, {username, email, password})}
+        
+    }
+    const checkConfPass = (e)=>{
+      if(e.target.value === password){
+        document.getElementById("confPass").style.border = "2px solid green"
+      }else{
+        document.getElementById("confPass").style.border = "2px solid red"
+      }
+
+    }
+
+    console.log(username, email, password)
     return (
         <Container>
             <Wrapper>
                 <Title>CREATE AN ACCOUNT</Title>
                 <Form>
-                    <Input placeholder="first name"/>
-                    <Input placeholder="last name"/>
-                    <Input placeholder="username"/>
-                    <Input placeholder="email"/>
-                    <Input placeholder="password"/>
-                    <Input placeholder="Confirm password"/>
-                    
+                    <Input placeholder="username" onChange={(e)=>{setusername(e.target.value)}}/>
+                    <Input placeholder="email" onChange={(e)=>{setemail(e.target.value)}}/>
+                    <Input placeholder="password" onChange={(e)=>{setpassword(e.target.value)}}/>
+                    <Input id="confPass" placeholder="Confirm password" onChange={checkConfPass}/>
+                    {error && <Error id="err">Something went wrong...</Error>}
                     <Agreement>By creating an account, I consert to the processing of my personal data in accordance with the <b>PRIVACY POLICY</b></Agreement>
-                    <Button>CREATE</Button>
+                    <Button onClick={handleClick} >CREATE</Button>
                 </Form>
             </Wrapper>
         </Container>

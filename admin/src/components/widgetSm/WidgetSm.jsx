@@ -11,10 +11,9 @@ const WidgetSm = () => {
     useEffect(() => {
        const getUsers = async()=>{
         try{   
-        const res= await userRequest.get("/users/fetchAllUsers?new=true")
-        console.log(res)
+        const res= await userRequest.get("users/fetchAllUsers?new=true")
            setusers(res.data);
-           console.log(users)
+        
         }catch(err){
             console.log(err);
         }
@@ -26,7 +25,7 @@ const WidgetSm = () => {
         <div className='WidgetSm'>
             <span className="widgetSmTitle">New Join Members</span>
             <ul className="widgetSmList">
-                {users && users.map(user=>(
+                {users && users.map((user) =>(
                     <li className="widgetSmListItem" key={user._id}>
                     <img className="widgetSmImg" alt="" src={user.img || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSywmP2SKcYqmuHximQxKLHirwVo-mvma_xdA&usqp=CAU'}/>
                     <div className="widgetSmUser">

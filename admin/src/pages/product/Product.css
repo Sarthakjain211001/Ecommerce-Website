@@ -87,6 +87,7 @@ margin-bottom: 10px;
 .productUpload{
     display: flex;
     align-items: center;
+    margin-top: 40px;
 }
 .productButton{
     border: none;

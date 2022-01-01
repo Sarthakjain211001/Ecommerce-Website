@@ -69,7 +69,7 @@ router.get("/fetchUserOrders/:userId", verifyToken, async(req,res) => {
 router.get("/fetchAllOrders", verifyToken ,async(req,res) => {    
     if(req.user.isAdmin){                //Only admin can fetch all the orders.
     try{
-        orders = await Order.find();                                                                                        
+        const orders = await Order.find();                                                                                        
         if(orders){
             return res.status(200).json(orders);  
         }
@@ -89,11 +89,16 @@ router.get("/fetchAllOrders", verifyToken ,async(req,res) => {
 router.get("/orderStats", verifyToken, async(req,res)=>{
     if(req.user.isAdmin){
         try{            
+            const productId = req.query.pid;
             const date= new Date();
-            const prevMonth = new Date(date.setMonth(date.getMonth() - 1));   //Prev month 
-            const prevToPrevMonth = new Date(new Date().setMonth(prevMonth.getMonth() - 1));   //Prev to prev Month            
+            const prevMonth = new Date(date.setMonth( date.getMonth() - 1) );   //Prev month 
+            const prevToPrevMonth = new Date(date.setMonth( prevMonth.getMonth() - 1));   //Prev to prev Month            
             const income = await Order.aggregate([                    //This will aggregate the orders based on the condition which we will provide .
-                { $match: { createdAt: { $gte: prevToPrevMonth}}
+                { $match: { createdAt: { $gte: prevToPrevMonth}, 
+                               ...(productId && {
+                                   products: {$elemMatch: { productId }},
+                               }),
+                            },
                 },        // orders whose createdAt date is greater than the prevToPrevMonth.
                 {
                   $project: {
@@ -107,7 +112,8 @@ router.get("/orderStats", verifyToken, async(req,res)=>{
                         total: { $sum: "$sales"},                   
                     },
                 }
-            ]);        
+            ]);   
+            income.sort(function(a, b){return a._id - b._id})     
             return res.status(200).json(income) ;
         }catch(err){
             return res.status(500).json(err);

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { mobile } from '../responsive'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../redux/apiCalls'
-
+import { Link } from 'react-router-dom'
 
 const Container = styled.div`
 width: 100vw;
@@ -63,11 +63,12 @@ margin-top: 10px;
 }
 
 `
-const Link = styled.a`
+const Lin = styled.a`
     margin: 5px 0px;
     font-size: 12px;
     text-decoration: underline;
     cursor: pointer;
+    
 `
 const Error = styled.span`
     color: red;
@@ -80,6 +81,7 @@ const Login = () => {
     const dispatch = useDispatch()
 
     const {isFetching, error} = useSelector((state) => state.user)  //using isFetching and error states
+ 
     const handleClick = (e)=>{
         e.preventDefault();
         login(dispatch, {email, password});   //calling login from apiCalls file to send api request for login
@@ -90,11 +92,11 @@ const Login = () => {
             <Title>SIGN IN</Title>
             <Form>
                 <Input placeholder="email" onChange={(e)=> setemail(e.target.value)}/>
-                <Input type="password" onChange={(e)=> setpassword(e.target.value)}/>
+                <Input type="password" placeholder="password" onChange={(e)=> setpassword(e.target.value)}/>
                 <Button onClick={handleClick} disabled={isFetching}>LOGIN</Button>  {/*when isFetching state will be true i.e fetching the response is in progress then the login button will be disabled */}
-                {error && <Error>Something went wrong...</Error>}  {/*if error occurs i.e the error state changes to true then this will be printed*/}
-                <Link>Forgot password ?</Link>
-                <Link>Register</Link>
+                {error && <Error id="err">Something went wrong...</Error>} {/*if error occurs i.e the error state changes to true then this will be printed*/}
+                <Lin style={{"width": "100px"}}>Forgot password ?</Lin>
+                <Lin style={{"width": "50px"}}><Link to="/register">Register?</Link></Lin>
                 
             </Form>
         </Wrapper>

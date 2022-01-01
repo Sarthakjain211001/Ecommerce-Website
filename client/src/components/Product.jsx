@@ -68,7 +68,6 @@ const Product = (props) => {
         <Container>
            <Circle/>
            <Image src={props.item.img}/>
-           {console.log(props.item.img)}
            <Info>
                <Icon>
                    <ShoppingCartOutlined/>

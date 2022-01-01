@@ -12,8 +12,6 @@ const Container = styled.div`
 `
 const Products = (props) => {
   const{category, filters, sort} = props;
-  console.log(category, filters, sort);
-
   const [Products, setProducts] = useState([])
   const [filteredProducts, setfilteredProducts] = useState([])    //Whenever our filters will change we will update filteredProducts
   const [sortedProducts, setsortedProducts] = useState([])

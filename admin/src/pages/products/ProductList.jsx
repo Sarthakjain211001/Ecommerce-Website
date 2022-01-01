@@ -2,19 +2,27 @@ import React from "react";
 import "./ProductList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { DeleteOutline } from "@material-ui/icons";
-import { productRows } from "../../DummyData";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState , useEffect} from "react";
+import { deleteProduct, getProducts } from "../../redux/apiCalls";
+import {useDispatch} from "react-redux"
+import { useSelector } from "react-redux";
 
 const ProductList = () => {
-  const [data, setdata] = useState(productRows);
-
+   
+  const products = useSelector(state => state.product.products)
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    getProducts(dispatch)
+  }, [dispatch])
+  
   const handleDelete = (id) => {
-    setdata(data.filter((item) => item.id !== id));
+    deleteProduct(id, dispatch);
   };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "_id", headerName: "ID", width: 220 },
     {
       field: "product",
       headerName: "Product",
@@ -23,17 +31,13 @@ const ProductList = () => {
         return (
           <div className="productListItem">
             <img className="productListImg" src={props.row.img} alt="" />
-            {props.row.name}
+            {props.row.title}
           </div>
         );
       },
     },
-    { field: "stock", headerName: "Stock", width: 200 },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 120,
-    },
+    { field: "inStock", headerName: "Stock", width: 200 },
+    
     {
       field: "price",
       headerName: "Price",
@@ -46,12 +50,12 @@ const ProductList = () => {
       renderCell: (props) => {
         return (
           <>
-            <Link to={"/product/" + props.row.id}>
+            <Link to={"/product/" + props.row._id}>
               <button className="productListEdit">Edit</button>
             </Link>
             <DeleteOutline
               className="productListDelete"
-              onClick={() => handleDelete(props.row.id)}
+              onClick={() => handleDelete(props.row._id)}
             />
           </>
         );
@@ -61,13 +65,14 @@ const ProductList = () => {
 
   return (
     <div className="products">
-      <Link to="/newProduct" style={{"marginLeft":"1000px"}}>
+      <Link to="/newProduct" style={{"marginLeft":"900px"}}>
                     <button className="productAddButton">Create</button>
           </Link>
-      <DataGrid  style={{"marginTop":"10px"}}
-        rows={data}
+      <DataGrid  style={{"marginTop":"10px", "height": "400px"}}
+        rows={products}
         columns={columns}
         pageSize={5}
+        getRowId={row => row._id}
         rowsPerPageOptions={[5]}
         checkboxSelection
         disableSelectionOnClick //To prevent the row from getting selected when we click anywhere on the row.

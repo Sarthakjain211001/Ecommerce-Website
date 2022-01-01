@@ -62,9 +62,11 @@ router.get("/fetchAllUsers", verifyToken, async(req,res) => {    //The user whos
         const users = query ? await User.find().sort({_id : -1}).limit(5) : await User.find();    //We can use query to get latest 5 entries. sort({_id : -1}) . This will give latest 5. Otherwise it will give oldest 5.        // const users = await User.find();
                                                                                                   //If query is present then it will give the mentioned data else will give the whole data.        
         if(users){
+            
             return res.status(200).json(users);  
         }
         else{
+            
             return res.status(400).json("No users present");  
         }
      }catch(err){

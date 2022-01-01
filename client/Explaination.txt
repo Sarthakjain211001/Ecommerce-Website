@@ -315,3 +315,4 @@ In App.js set user to currentUser state using useSelector. If user is logged in 
 
 Now the problem is : after login when we are reloading the home page then we are lossing the logged in user. i.e the currentUser state is again changing to null. 
 To overcome this we will use persist(from redux toolkit). (https://redux-toolkit.js.org/usage/usage-guide#use-with-redux-persist)
+persist will store the store in the local storage

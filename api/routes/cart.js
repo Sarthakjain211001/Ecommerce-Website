@@ -8,6 +8,7 @@ const verifyToken = require("../middleware/verifyToken");
 router.post("/addCart", verifyToken, async(req, res)=>{
       try{
           const newCart = new Cart(req.body);
+          
           const savedCart = await newCart.save();
           return res.status(200).json(savedCart);
       }catch(err){
@@ -70,7 +71,7 @@ router.get("/fetchCart/:userId", verifyToken, async(req,res) => {
 router.get("/fetchAllCarts", verifyToken ,async(req,res) => {    
     if(req.user.isAdmin){
     try{
-        carts = await Cart.find();                                                                                        
+        const carts = await Cart.find();                                                                                        
         if(carts){
             return res.status(200).json(carts);  
         }

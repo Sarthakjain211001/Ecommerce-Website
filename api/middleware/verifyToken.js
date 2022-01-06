@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next)=>{
  const token = req.header('authToken');
+ console.log(token);
  if(!token){
      return res.status(401).json("Token not available");
  }
@@ -11,6 +12,7 @@ const verifyToken = (req, res, next)=>{
                                                         //                           isAdmin: false,
                                                         //                           iat: 1639588647,
                                                         //                           exp: 1639847847  }
+
 
   req.user = data;                  //Passing data in req as user
   next();

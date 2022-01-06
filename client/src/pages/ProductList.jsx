@@ -58,9 +58,6 @@ const ProductList = () => {
     const handleSort = (e)=>{
        setSort(e.target.value);
     }
-
-    console.log(filters);
-    console.log(sort);
     
     return (
         <Container>

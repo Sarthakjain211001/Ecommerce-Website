@@ -11,7 +11,7 @@ height: 100vh;
 background:  linear-gradient(                  
             rgba(255,255,255,0.5),         
             rgba(255,255,255,0.5)
-            ),                           // Linearr gradient to apply opacity to the background-image.
+            ),                           // Linear gradient to apply opacity to the background-image.
              url("https://media.istockphoto.com/photos/shopping-online-concept-shopping-service-on-the-online-web-with-by-picture-id1133980246?k=20&m=1133980246&s=612x612&w=0&h=bwut2YUV7gtnjrv354523xU_9S-TtKQOqGTdiGMsPfs=") ;
 background-size: cover; 
 overflow: hidden;
@@ -70,14 +70,14 @@ const Register = () => {
     const [password, setpassword] = useState("")
     
     const {error} = useSelector(state => state.user)
-
+    
     const dispatch = useDispatch();
     
-    const handleClick = (e)=>{
+    const handleClick =  (e)=>{
         e.preventDefault();
-        if(document.getElementById("confPass").value === password)
-          {register(dispatch, {username, email, password})}
-        
+        if(document.getElementById("confPass").value === password){
+          register(dispatch, {username, email, password}); 
+          }
     }
     const checkConfPass = (e)=>{
       if(e.target.value === password){
@@ -88,7 +88,6 @@ const Register = () => {
 
     }
 
-    console.log(username, email, password)
     return (
         <Container>
             <Wrapper>

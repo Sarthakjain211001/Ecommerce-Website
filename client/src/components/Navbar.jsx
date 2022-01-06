@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { logout } from "../redux/UserRedux";
+import { emptyCart } from "../redux/cartRedux";
+import { emptyOrders } from "../redux/orderRedux";
 
 const Container = styled.div`
   height: 60px;
@@ -67,9 +69,12 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(state => state.user.currentUser)
+
   const handleLogout=(e)=>{
       e.preventDefault();
       dispatch(logout());
+      dispatch(emptyCart()); //we will empty the cart state as soon as the user logs it. (** NOTE: This will clear the cart state only from the frontend not from the backend)
+      dispatch(emptyOrders());
       navigate("/login");
   }
 
@@ -88,7 +93,7 @@ const Navbar = () => {
           <Logo><Link to = "/" style={{"textDecoration":"none", "color":"black"}}>LAMA.</Link></Logo>
         </Center>
         <Right>
-          <MenuItem style={{"color": "red"}} onClick={handleLogout}>Logout</MenuItem>
+          
           {!user  && <MenuItem><Link to="Register" style={{"textDecoration":"none"}}>Register</Link></MenuItem>}
           {!user  && <MenuItem><Link to="/login" style={{"textDecoration":"none"}}>SignIn</Link></MenuItem>}
            
@@ -99,6 +104,12 @@ const Navbar = () => {
             </Badge>
             </Link>
           </MenuItem>
+          <MenuItem >
+          <Link to="/myOrders" style={{"textDecoration":"none"}}>
+            My Orders
+          </Link>
+          </MenuItem>
+          <MenuItem style={{"color": "red"}} onClick={handleLogout}>Logout</MenuItem>
           
         </Right>
       </Wrapper>

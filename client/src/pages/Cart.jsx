@@ -4,8 +4,6 @@ import styled from "styled-components";
 import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import Product7 from "../Images/product7.png"
-import Product2 from "../Images/product2.png"
 import { mobile } from "../responsive";
 import { useSelector } from "react-redux";
 import StripeCheckout from "react-stripe-checkout";
@@ -13,9 +11,14 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { userRequest } from "../requestMethods"
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { emptyCart } from "../redux/cartRedux";
+import { addOrder, updateCart } from "../redux/apiCalls";
 
 const KEY = "pk_test_51K7IaVSJ7mZ97jfF3c4RNiUHjYrhFVsx4VbNP40ODEZCjDLqSbWGEerf8SQYUwA255t8O4xGDZARQ5zz1qXKqSrg00jfr9WKIk"; 
 const SEC_KEY = ""
+
 const Container = styled.div``;
 const Wrapper = styled.div`
   padding: 20px;
@@ -62,7 +65,6 @@ const Product = styled.div`
 display: flex;
 justify-content: space-between;
 margin: 20px 0px;
-/* border: 3px solid blue */
 ${mobile({flexDirection:"column"})}
 `
 
@@ -116,7 +118,7 @@ const QuantityContainer = styled.div`
 display: flex;
 align-items: center;
 margin-bottom: 20px;
-${mobile({/*border: "2px solid blue",*/ marginTop:"22px"})}
+${mobile({ marginTop:"22px"})}
 `
 const Quantity = styled.div`
 font-size: 24px;
@@ -126,7 +128,6 @@ ${mobile({margin:"5px 15px"})}
 const ProductPrice = styled.div`
 font-size: 30px;
 font-weight: 300;
-/* ${mobile({border: "2px solid blue", })} */
 `
 const Hr = styled.hr`
 background-color: #eee;
@@ -138,7 +139,6 @@ const Summary= styled.div`
 flex: 1;
 border: 0.5px solid lightgray;
 border-radius: 10px;
-/* margin: 20px; */
 padding: 20px;
 height: 50vh;   //Whenever new items will get added the size of the summary box will increase. So we kept it's size like this not like 100px. .. 
 ${mobile({border: "1px solid lightgray"})}
@@ -163,33 +163,54 @@ padding: 10px;
 background-color: black;
 color: white;
 font-weight: 600;
+cursor: pointer;
 `
 
 
 const Cart = () => {
 
   const cart = useSelector(state => state.cart)
-
+  const user = useSelector(state => state.user)
+  const user_Id = user.currentUser._id;
   const navigate = useNavigate();
   const [StripeToken, setStripeToken] = useState(null)
   const onToken = (token)=>{
     setStripeToken(token);
   }
+
+  const handleEmptyClick = ()=>{
+    const newCart = {userId: user_Id, products:[] ,cart_quantity: 0 ,total_amt:0};
+    updateCart(user_Id, newCart);
+    dispatch(emptyCart());
+  }
+
   useEffect(() => {
-    const makeRequest = async()=>{
+     const makeRequest = async()=>{
       try{
         const res = await userRequest.post("/checkout/payment", {
           tokenId : StripeToken.id,
           amount: cart.total_amt * 100, 
         });
-        console.log(res);
+        
+
+        const products = cart.products;
+        const total_amt = cart.total_amt;
+        const address = res.data.billing_details;
+        addOrder({products: products, address:address, amount: total_amt })
         navigate("/paymentSuccess")
+        handleEmptyClick();
+      
       }catch(err){
         console.log(err);
       }
     }
     StripeToken && makeRequest();
-  }, [StripeToken, cart.total_amt, navigate])
+  }, [StripeToken, cart, cart.total_amt, navigate])
+
+  const dispatch = useDispatch()
+
+  
+
   return (
     <div>
       <Container>
@@ -198,13 +219,13 @@ const Cart = () => {
         <Wrapper>
           <Title>YOUR BAG</Title>
           <Top>
-            <TopButton>CONTINUE SHOPPING</TopButton>
+            <TopButton><Link to="/" style={{"textDecoration":"none", "color":"black"}}>CONTINUE SHOPPING</Link></TopButton>
             <TopTexts>
-              <TopText>Shopping Bag (2)</TopText>
-              <TopText>Your Wishlist (0)</TopText>
+              <TopText>Shopping Bag ({cart.cart_quantity})</TopText>
             </TopTexts>
             <TopButton type="filled">CHECKOUT NOW</TopButton>
           </Top>
+          <Button onClick={handleEmptyClick} style={{"width": "100px", "marginLeft":"20px"}}>Empty Cart</Button>
           <Bottom>
               <Info>
               {
@@ -226,9 +247,13 @@ const Cart = () => {
                         </QuantityContainer>
                         <ProductPrice>Rs {product.price * product.quantity}</ProductPrice>
                 </PriceDetail>
-            </Product>))
+                
+            </Product>
+            
+              ))
+            
               }
-              <Hr/>
+              
               </Info>
               <Summary>
                 <SummaryTitle>ORDER SUMMARY</SummaryTitle>
@@ -252,14 +277,14 @@ const Cart = () => {
                  name="ecommerce" 
                  image="https://c8.alamy.com/comp/2E1ACFM/initial-circle-sj-letter-logo-design-vector-template-abstract-letter-sj-logo-design-2E1ACFM.jpg" 
                  billingAddress 
-                 shippingAddress 
+                //  shippingAddress 
                  description={`Your total is Rs ${cart.total_amt}`}
                  amount={cart.total_amt} 
                  token={onToken} 
                  stripeKey={KEY} 
                 //  currency={inr}
                 >
-                <Button>CHECKOUT NOW</Button>
+                <Button /*onClick={handleCheckout}*/>CHECKOUT NOW</Button>
                 </StripeCheckout>
                 
               </Summary>

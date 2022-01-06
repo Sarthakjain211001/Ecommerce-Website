@@ -7,16 +7,17 @@ const CartSchema = new Schema({
         required: true,
     },
     products : [         //products will be containing many different products
-        {                //And each product will have a productId and quantity. 
-        productId: {
-          type:String,
-        }, 
-        quantity:{
-          type: Number,
-          default : 1
-        }             
+        {
+         
+        }
+    ],
+    cart_quantity :{
+      type: Number
+    },
+    total_amt: {
+      type: Number
     }
-    ]
+
 }, 
 {timestamps : true}   //Mongo will create createdAt and updatedAt .
 )

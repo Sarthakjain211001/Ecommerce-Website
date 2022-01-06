@@ -49,9 +49,9 @@ router.delete("/deleteOrder/:id", verifyToken, async(req, res)=>{
 router.get("/fetchUserOrders/:userId", verifyToken, async(req,res) => {     
     if(req.user.id === req.params.userId){
      try{
-        const orders = await Order.find({userId: req.params.userId});       //One user can hae more than one orders. So find() .. not findOne()
+        const orders = await Order.find({userId: req.params.userId});       //One user can have more than one orders. So find() .. not findOne()
         if(orders){             
-            return res.status(200).json(cart);       
+            return res.status(200).json(orders);       
         }
         else{
             return res.status(400).json("No orders found");  

@@ -8,7 +8,7 @@ const verifyToken = require("../middleware/verifyToken");
 router.post("/addCart", verifyToken, async(req, res)=>{
       try{
           const newCart = new Cart(req.body);
-          
+          newCart.userId = req.user.id;
           const savedCart = await newCart.save();
           return res.status(200).json(savedCart);
       }catch(err){
@@ -17,11 +17,12 @@ router.post("/addCart", verifyToken, async(req, res)=>{
     })
 
 //Update the cart 
-router.put("/updateCart/:id", verifyToken, async(req,res)=>{
+router.put("/updateCart/:id", verifyToken, async(req,res)=>{   //pass the user id in the request url
     if(req.user.id === req.params.id){    
       try{
-        const updatedCart = await Cart.findByIdAndUpdate(req.params.id, {$set : req.body}, { new : true });  //Find and update the Product. 
-        return res.status(200).json(updatedCart);
+        const updatedCart = await Cart.findOneAndUpdate({userId: req.user.id}, {$set : req.body});   //Find the cart whose userId is same as the id present in request(i.e id obtained thorugh authToken using middleware) and update it.
+                                              //Cart which needs to be updated   //data which needs to be set in new cart
+        return res.status(200).json(updatedCart);       
       }catch(err){
           res.json(err);
       }
@@ -35,12 +36,11 @@ router.put("/updateCart/:id", verifyToken, async(req,res)=>{
 router.delete("/deleteCart/:id", verifyToken, async(req, res)=>{
     if(req.user.id === req.params.id){
         try{
-            const deletedCart = await Cart.findByIdAndDelete(req.params.id);
-            return res.status(200).json("Successfull deletion");
+            const deletedCart = await Cart.findOneAndDelete({userId: req.user.id});
+            return res.status(200).json(deletedCart);
         }catch(err){
             return res.status(400).json(err);
         }
-
     }
     else{
         return res.status(403).json("Not Allowed");

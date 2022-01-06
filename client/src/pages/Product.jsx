@@ -9,8 +9,9 @@ import Newsletter from '../components/Newsletter'
 import { mobile } from '../responsive'
 import {publicRequest } from '../requestMethods'
 import { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch , useSelector} from 'react-redux'
 import { addProduct } from '../redux/cartRedux'
+import { updateCart } from '../redux/apiCalls'
 
 const Container = styled.div``
 
@@ -127,6 +128,10 @@ const Product = () => {
     const [size, setsize] = useState("")
     const dispatch = useDispatch()
 
+    const user_Id = useSelector(state => state.user.currentUser._id)
+    
+    // const cart = useSelector(state => state.cart)
+
     useEffect(() => {
         const getproduct = async()=>{
             try{
@@ -149,10 +154,20 @@ const Product = () => {
     }
 
     const handleClick=() =>{
-        //Update Cart
+        const item = { ...product, quantity, color, size}
         dispatch(
-            addProduct({ ...product, quantity, color, size})
+            addProduct(item),
         )
+        setTimeout(() => {        //Using setTimeout so that first prev thing(i.e disptch) should get completed. Then we will send the update req using data from the cart state.
+                                  //This should not be done because if someday (may be possible) dispatch takes more than 3 sec to execute then my backend req will be sent without the latest data.
+            const cart=  JSON.parse(JSON.parse(localStorage.getItem("persist:root")).cart)           
+            updateCart(user_Id, {user_Id, ...cart});
+        }, 3000);
+        
+        //***This should not be done. i.e here first i am doing changes on frontend then sending the backend request.
+        //If the req fails then data will not get updated in backend but on frontend it will get updated.
+        //But i am not getting any idea how to first send the req then do the frontend changes because for sending the data to the backend i am using data from the cart state.
+        //So i am first updating the cart state on frontend then using it as data to send the backend update request.
     }
     return (
         <Container>
@@ -179,10 +194,10 @@ const Product = () => {
                       </Filter>
                       <Filter>
                           <FilterTitle>Size</FilterTitle>
-                          <FilterSize onChange={(e)=>{setsize(e.target.value); console.log("size: " + size)}}>
+                          <FilterSize onChange={(e)=>{setsize(e.target.value)}}>
                           
                            {
-                            console.log(product.size),                            
+                        
                             product.size && product.size.map((s) => {            //If product.size exists then apply map method.  Without this(product.size) it was giving error that product.size is undefined.
                                 return <FilterSizeOption key={s} value={s}> {s}</FilterSizeOption>
                           })}
